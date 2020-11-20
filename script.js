@@ -19,20 +19,38 @@ const roll = document.querySelector('.btn--roll');
 const hold = document.querySelector('.btn--hold');
 const newGame = document.querySelector('.btn--new');
 
-// starting conditions
-score0.textContent = 0;
-score1.textContent = 0;
-diceEl.classList.add('hidden');
+// Declaring empty variables outside of the function since let values are scoped and not
+// available outside of the function so you can't declare them inside.
+let score, currentScore, activePlayer, playing;
 
-// Starting values for the score. Score array for the overall score per player;
-// current score depending on which player is active; we set the active player in the
-// if else statement below
-const score = [0, 0];
-let currentScore = 0;
-let activePlayer = 0;
+function initializeGame() {
+  // Starting values for the score. Score array for the overall score per player;
+  // current score depending on which player is active; we set the active player in the
+  // if else statement below
+  score = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
 
-// Variable to set the state of the game (whether or not we are still playing)
-let playing = true;
+  // Variable to set the state of the game (whether or not we are still playing)
+  playing = true;
+
+  // starting conditions; Score text is zero and the dice is initially hidden
+  score0.textContent = 0;
+  score1.textContent = 0;
+  current0.textContent = 0;
+  current1.textContent = 0;
+
+  diceEl.classList.add('hidden');
+
+  // resetting the class lists to remove the winner if its there and resetting
+  // player 0 to the active player
+  player0.classList.remove('player--winner');
+  player1.classList.remove('player--winner');
+  player0.classList.add('player--active');
+  player1.classList.remove('player--active');
+}
+// START THE GAME!!
+initializeGame();
 
 // function to switch the player
 function switchPlayer() {
@@ -84,7 +102,7 @@ hold.addEventListener('click', function () {
       score[activePlayer];
 
     // 2. check to see if the score is 100
-    if (score[activePlayer] >= 20) {
+    if (score[activePlayer] >= 100) {
       // finish the game
       playing = false;
       diceEl.classList.add('hidden');
@@ -98,5 +116,15 @@ hold.addEventListener('click', function () {
       // 3. switch to the other player of score hasn't reached 100
       switchPlayer();
     }
+  }
+});
+
+newGame.addEventListener('click', function () {
+  // if the player confirms that they want to start a new game, then reset everything to
+  // zero; else do nothing
+  if (
+    confirm('Do you want to start a new game? Your scores will be deleted.')
+  ) {
+    initializeGame();
   }
 });
